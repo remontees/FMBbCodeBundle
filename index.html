@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="RmsBBCodeBundle : Adds BBCode support to Twig for your Symfony2 project" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>RmsBBCodeBundle</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/remontees/FMBbCodeBundle">View on GitHub</a>
+
+          <h1 id="project_title">RmsBBCodeBundle</h1>
+          <h2 id="project_tagline">Adds BBCode support to Twig for your Symfony2 project</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/remontees/FMBbCodeBundle/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/remontees/FMBbCodeBundle/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a href="/milesj/php-decoda">PHP-Decoda</a> integration in Symfony2</h1>
+
+<p><em>A lightweight lexical string parser for BBCode styled markup.</em></p>
+
+<h2>Installation</h2>
+
+<p>To install this bundle, you'll need both the <a href="/milesj/php-decoda">Decoda library</a>
+and this bundle. Installation depends on how your project is setup:</p>
+
+<h3>Step 1: Installation</h3>
+
+<p>Add the following lines to your <code>deps</code> file</p>
+
+<pre><code>[php-decoda]
+    git=http://github.com/milesj/php-decoda.git
+    version=3.5
+
+[FMBbcodeBundle]
+    git=http://github.com/helios-ag/FMBbCodeBundle.git
+    target=bundles/FM/BbcodeBundle
+</code></pre>
+
+<p>Run the vendors script::</p>
+
+<pre><code>./bin/vendors install
+</code></pre>
+
+<p>Or you can use composer to install this bundle:
+Add FMBbcodeBundle in your composer.json:</p>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">"require"</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">"helios-ag/fm-bbcode-bundle"</span><span class="o">:</span> <span class="s2">"*"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Now tell composer to download the bundle by running the command:</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>php composer.phar update helios-ag/fm-bbcode-bundle
+</pre></div>
+
+<h3>Step 2: Configure the autoloader</h3>
+
+<p>Add the following entries to your autoloader:</p>
+
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="c1">// app/autoload.php</span>
+
+<span class="nv">$loader</span><span class="o">-&gt;</span><span class="na">registerNamespaces</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="c1">// ...</span>
+       <span class="s1">'FM'</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">'/../vendor/bundles'</span><span class="p">,</span>
+        <span class="c1">// your other namespaces</span>
+    <span class="p">));</span>
+
+<span class="nv">$loader</span><span class="o">-&gt;</span><span class="na">registerPrefixes</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="c1">//...</span>
+       <span class="s1">'Decoda'</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">'/../vendor/php-decoda/decoda'</span><span class="p">,</span>
+    <span class="c1">// your other libraries</span>
+    <span class="p">));</span>
+</pre></div>
+
+<h3>Step 3: Enable the bundle</h3>
+
+<p>Finally, enable the bundle in the kernel:</p>
+
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="c1">// app/AppKernel.php</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="nf">registerBundles</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$bundles</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+        <span class="c1">// ...</span>
+        <span class="k">new</span> <span class="nx">FM\BbcodeBundle\FMBbcodeBundle</span><span class="p">(),</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>Basic configuration</h3>
+
+<h2>Make the Twig extensions available by updating your configuration:</h2>
+
+<pre><code>By default only "default" filter enabled, which provide support
+for [b], [i], [u], [s], [sub], [sup] BBCodes
+</code></pre>
+
+<h1>Examples to use the extension in your Twig template</h1>
+
+<p>Define BBCode filter in your config.yml:</p>
+
+<div class="highlight"><pre>    <span class="l-Scalar-Plain">fm_bbcode</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">filter_sets</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">my_default_filter</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">locale</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ru</span>
+          <span class="l-Scalar-Plain">xhtml</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+          <span class="l-Scalar-Plain">filters</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span> <span class="nv">default</span> <span class="p-Indicator">]</span>
+</pre></div>
+
+<p>And you can do the following:</p>
+
+<div class="highlight"><pre><span class="x">     </span><span class="cp">{{</span><span class="s1">'[b]Bold text[/b]'</span><span class="o">|</span><span class="nf">bbcode_filter</span><span class="o">(</span><span class="s1">'my_default_filter'</span><span class="o">)</span><span class="cp">}}</span><span class="x"></span>
+<span class="x">     </span><span class="cp">{{</span><span class="s1">'[u]Underlined text[/u]'</span><span class="o">|</span><span class="nf">bbcode_filter</span><span class="o">(</span><span class="s1">'my_default_filter'</span><span class="o">)</span><span class="cp">}}</span><span class="x"></span>
+<span class="x">     </span><span class="cp">{{</span><span class="s1">'[i]Italic text[/i]'</span><span class="o">|</span><span class="nf">bbcode_filter</span><span class="o">(</span><span class="s1">'my_default_filter'</span><span class="o">)</span><span class="cp">}}</span><span class="x"></span>
+</pre></div>
+
+<div class="highlight"><pre>    <span class="l-Scalar-Plain">fm_bbcode</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">filter_sets</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">my_default_filter</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">locale</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ru</span>
+          <span class="l-Scalar-Plain">xhtml</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+          <span class="l-Scalar-Plain">filters</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span> <span class="nv">default</span><span class="p-Indicator">,</span> <span class="nv">quote</span> <span class="p-Indicator">]</span>
+          <span class="l-Scalar-Plain">whitelist</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span> <span class="nv">b</span><span class="p-Indicator">,</span> <span class="nv">quote</span> <span class="p-Indicator">]</span>
+</pre></div>
+
+<p>After enabling "quote" filter, you can do such things:</p>
+
+<div class="highlight"><pre><span class="x">      </span><span class="cp">{{</span><span class="s1">'[quote="helios"]My quote[/quote]'</span><span class="o">|</span><span class="nf">bbcode_filter</span><span class="o">(</span><span class="s1">'my_default_filter'</span><span class="o">)</span><span class="cp">}}</span><span class="x"></span>
+</pre></div>
+
+<p>Also you can define multiple filter sets under filter_sets parameter like this:</p>
+
+<div class="highlight"><pre>    <span class="l-Scalar-Plain">fm_bbcode</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">filter_sets</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">my_forum_filter</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">locale</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ru</span>
+          <span class="l-Scalar-Plain">xhtml</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+          <span class="l-Scalar-Plain">filters</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span> <span class="nv">default</span><span class="p-Indicator">,</span> <span class="nv">quote</span> <span class="p-Indicator">]</span>
+          <span class="l-Scalar-Plain">whitelist</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span> <span class="nv">b</span><span class="p-Indicator">,</span> <span class="nv">quote</span> <span class="p-Indicator">]</span>
+        <span class="l-Scalar-Plain">my_comment_filter</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">locale</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ru</span>
+          <span class="l-Scalar-Plain">xhtml</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+          <span class="l-Scalar-Plain">filters</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span> <span class="nv">default</span><span class="p-Indicator">,</span> <span class="nv">block</span><span class="p-Indicator">,</span> <span class="nv">code</span><span class="p-Indicator">,</span> <span class="nv">email</span><span class="p-Indicator">,</span> <span class="nv">image</span><span class="p-Indicator">,</span> <span class="nv">list</span><span class="p-Indicator">,</span> <span class="nv">quote</span><span class="p-Indicator">,</span> <span class="nv">text</span><span class="p-Indicator">,</span> <span class="nv">url</span><span class="p-Indicator">,</span> <span class="nv">video</span> <span class="p-Indicator">]</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="x">      </span><span class="cp">{{</span><span class="s1">'[quote="helios"]My quote[/quote]'</span><span class="o">|</span><span class="nf">bbcode_filter</span><span class="o">(</span><span class="s1">'my_forum_filter'</span><span class="o">)</span><span class="cp">}}</span><span class="x"></span>
+<span class="x">      </span><span class="cp">{{</span><span class="s1">'[code]My source code[/code]'</span><span class="o">|</span><span class="nf">bbcode_filter</span><span class="o">(</span><span class="s1">'my_comment_filter'</span><span class="o">)</span><span class="cp">}}</span><span class="x"></span>
+</pre></div>
+
+<p>Please keep in mind, that whitelist tags overrides filters configuration.</p>
+
+<h2>Advanced usage</h2>
+
+<pre><code>FMBBcode bundle allow you to extend php-decoda functionality, you can extend available tags via filters and hooks,
+change messages, that used with some tags, and add your own templates. All this options available under config
+section of the fm_bbcode node.
+</code></pre>
+
+<h3>Adding own templates</h3>
+
+<pre><code>Your own templates can be defined at templates node, the example below shows how:
+</code></pre>
+
+<div class="highlight"><pre>    <span class="l-Scalar-Plain">fm_bbcode</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">config</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">templates</span><span class="p-Indicator">:</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">path</span><span class="p-Indicator">:</span> <span class="err">%</span><span class="l-Scalar-Plain">kernel.root_dir%/Resources/Decoda/templates/</span>
+</pre></div>
+
+<pre><code>Template examples can be inside decoda library
+</code></pre>
+
+<h3>Adding own filters</h3>
+
+<pre><code>You can define, own filters to extend list of supported tags, new filters can be set under filters: section of the
+config subnode, example below shows how:
+</code></pre>
+
+<div class="highlight"><pre><span class="l-Scalar-Plain">fm_bbcode</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">config</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">filters</span><span class="p-Indicator">:</span>
+        <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">classname</span><span class="p-Indicator">:</span> <span class="nv">magic</span><span class="p-Indicator">,</span> <span class="nv">class</span><span class="p-Indicator">:</span> <span class="nv">\Boom\Bundle\LibraryBundle\Decoda\Filter\MagicFilter</span> <span class="p-Indicator">}</span>
+</pre></div>
+
+<h3>Adding own hooks</h3>
+
+<pre><code>The same technique as above with filters.
+</code></pre>
+
+<div class="highlight"><pre><span class="l-Scalar-Plain">fm_bbcode</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">config</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">hooks</span><span class="p-Indicator">:</span>
+         <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">classname</span><span class="p-Indicator">:</span> <span class="nv">magic</span><span class="p-Indicator">,</span> <span class="nv">class</span><span class="p-Indicator">:</span> <span class="nv">\Boom\Bundle\LibraryBundle\Decoda\Filter\MagicFilter</span> <span class="p-Indicator">}</span>
+</pre></div>
+
+<h3>Adding own messages</h3>
+
+<pre><code>Some templates and hooks, use text strings, that can be translated into different languages, the original file
+ located under decoda/config directory, but content of this file can be overriden with messages option, under
+ messages: node. File should be json formatted.
+</code></pre>
+
+<div class="highlight"><pre><span class="l-Scalar-Plain">fm_bbcode</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">config</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">messages</span><span class="p-Indicator">:</span> <span class="s">'/some/path/to/somewhere'</span>
+</pre></div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">RmsBBCodeBundle maintained by <a href="https://github.com/remontees">remontees</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
